@@ -197,15 +197,44 @@ paths:
         500:
           description: Internal server error
 
-  /product:
+  /products:
     get:
       tags: [products]
       summary: Get all products
+      parameters:
+        - name: limit
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Specifies the page number of products to be displayed
+          schema:
+            type: integer
       responses:
         200:
           description: Return an array of objects
         500:
           description: Internal server error
+  /products/{categoryID}:
+    get:
+      tags: [products]
+      summary: Get all products for category
+      parameters:
+        - in: path
+          name: categoryID
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: return an array of objects
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+  /product:
     post:
       tags: [products]
       summary: Create new product
@@ -240,23 +269,6 @@ paths:
       responses:
         201:
           description: Created
-        500:
-          description: Internal server error
-  /products/{categoryID}:
-    get:
-      tags: [products]
-      summary: Get all products for category
-      parameters:
-        - in: path
-          name: categoryID
-          schema:
-            type: integer
-          required: true
-      responses:
-        200:
-          description: return an array of objects
-        404:
-          description: Not found
         500:
           description: Internal server error
   /product/{id}:
