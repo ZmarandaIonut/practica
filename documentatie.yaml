@@ -10,12 +10,12 @@ servers:
 # Basic authentication
 components:
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    bearerAuth: # arbitrary name for the security scheme
       type: http
       scheme: bearer
 security:
   - bearerAuth: []
-  
+
 paths:
   /register:
     post:
@@ -70,15 +70,14 @@ paths:
       tags: [user]
       description: Returns a user object
       responses:
-        '200':
+        "200":
           description: Successfully returned user
-        '400':
+        "400":
           description: Invalid request
-        
-  
+
   /categories:
     get:
-      description: Returns a list of categories 
+      description: Returns a list of categories
       tags: [category]
       parameters:
         - name: limit
@@ -92,19 +91,19 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Successfully returned a list of categories
-        '400':
+        "400":
           description: Invalid request
-          
+
   /categories-tree:
     get:
       tags: [category]
-      description: Returns a list of categories 
+      description: Returns a list of categories
       responses:
-        '200':
+        "200":
           description: Returned tree
-        '500':
+        "500":
           description: Internal server error
   /category:
     #  ----- Added lines  ----------------------------------------
@@ -116,7 +115,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - name
               properties:
@@ -126,19 +125,19 @@ paths:
                   type: integer
 
       responses:
-        '200':
+        "200":
           description: Successfully created a new category
 
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
               schema:
                 type: object
-                properties:   
+                properties:
                   message:
                     type: string
-          
+
   /category/{id}:
     get:
       tags: [category]
@@ -165,7 +164,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - name
               properties:
@@ -178,7 +177,7 @@ paths:
           description: Updated
         404:
           description: Category not found
-        
+
         500:
           description: Internal server error
     delete:
@@ -197,7 +196,7 @@ paths:
           description: Category not found
         500:
           description: Internal server error
-  
+
   /product:
     get:
       tags: [products]
@@ -215,7 +214,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - category_id
                 - name
@@ -291,7 +290,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - category_id
                 - name
@@ -319,7 +318,7 @@ paths:
           description: Updated
         404:
           description: Category not found
-        
+
         500:
           description: Internal server error
     delete:
@@ -348,7 +347,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - email
               properties:
@@ -376,7 +375,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - new_password
                 - new_password_confirmation
@@ -421,7 +420,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
+              type: object
               required:
                 - id
                 - name
@@ -438,8 +437,3 @@ paths:
           description: Email resend
         500:
           description: Internal server error
-
-      
-      
-
-            
