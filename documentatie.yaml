@@ -1,0 +1,445 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Practica API
+  description: Documentation for practica API
+
+servers:
+  - url: http://practica.local/api
+
+# Basic authentication
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+  
+paths:
+  /register:
+    post:
+      tags: [auth]
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad input
+        500:
+          description: Server error
+  /login:
+    post:
+      tags: [auth]
+      summary: Log a user in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Loged in!
+        400:
+          description: Bad credentials
+        500:
+          description: Server error
+  /user:
+    get:
+      tags: [user]
+      description: Returns a user object
+      responses:
+        '200':
+          description: Successfully returned user
+        '400':
+          description: Invalid request
+        
+  
+  /categories:
+    get:
+      description: Returns a list of categories 
+      tags: [category]
+      parameters:
+        - name: limit
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Specifies the page number of the artists to be displayed
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully returned a list of categories
+        '400':
+          description: Invalid request
+          
+  /categories-tree:
+    get:
+      tags: [category]
+      description: Returns a list of categories 
+      responses:
+        '200':
+          description: Returned tree
+        '500':
+          description: Internal server error
+  /category:
+    #  ----- Added lines  ----------------------------------------
+    post:
+      description: Lets a user create a new category
+      tags: [category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                parent_id:
+                  type: integer
+
+      responses:
+        '200':
+          description: Successfully created a new category
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  message:
+                    type: string
+          
+  /category/{id}:
+    get:
+      tags: [category]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Return a category object
+    put:
+      tags: [category]
+      summary: Update category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                parent_id:
+                  type: integer
+      responses:
+        200:
+          description: Updated
+        404:
+          description: Category not found
+        
+        500:
+          description: Internal server error
+    delete:
+      tags: [category]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Delete category
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Category not found
+        500:
+          description: Internal server error
+  
+  /product:
+    get:
+      tags: [products]
+      summary: Get all products
+      responses:
+        200:
+          description: Return an array of objects
+        500:
+          description: Internal server error
+    post:
+      tags: [products]
+      summary: Create new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - category_id
+                - name
+                - description
+                - quantity
+                - price
+                - status
+              properties:
+                category_id:
+                  type: string
+                parent_id:
+                  type: integer
+                name:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: integer
+                price:
+                  type: number
+                status:
+                  type: boolean
+      responses:
+        201:
+          description: Created
+        500:
+          description: Internal server error
+  /products/{categoryID}:
+    get:
+      tags: [products]
+      summary: Get all products for category
+      parameters:
+        - in: path
+          name: categoryID
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: return an array of objects
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+  /product/{id}:
+    get:
+      tags: [products]
+      summary: Get product by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: Return product object
+        404:
+          description: Product not found
+        500:
+          description: Internal server error
+    put:
+      tags: [products]
+      summary: Update category
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - category_id
+                - name
+                - description
+                - quantity
+                - price
+                - status
+              properties:
+                category_id:
+                  type: string
+                parent_id:
+                  type: integer
+                name:
+                  type: string
+                description:
+                  type: string
+                quantity:
+                  type: integer
+                price:
+                  type: number
+                status:
+                  type: boolean
+      responses:
+        200:
+          description: Updated
+        404:
+          description: Category not found
+        
+        500:
+          description: Internal server error
+    delete:
+      tags: [products]
+      summary: Delete product
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Product not found
+        500:
+          description: Internal server error
+
+  /forgotPassword:
+    post:
+      tags: [forgotpassword]
+      summary: Generate a token that allows you to reset your password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: Token generated
+        404:
+          description: Account not found
+        500:
+          description: Internal server error
+
+  /resetPassword/{token}:
+    post:
+      tags: [forgotpassword]
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - new_password
+                - new_password_confirmation
+              properties:
+                new_password:
+                  type: string
+                new_password_confirmation:
+                  type: string
+      responses:
+        200:
+          description: Password changed
+        404:
+          description: Token not found
+        500:
+          description: Internal server error
+  /email/verify/{id}/{hash}:
+    get:
+      tags: [email]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: hash
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Email verified
+        404:
+          description: User not found
+        500:
+          description: Internal server error
+  /email/verify/resend:
+    post:
+      tags: [email]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - id
+                - name
+                - email
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        200:
+          description: Email resend
+        500:
+          description: Internal server error
+
+      
+      
+
+            
